@@ -51,7 +51,7 @@ const SLICES = [{
   range: `>=4.1 <4.2`,
 }, {
   from: `8e0e870`,
-  to: `8e0e870`,
+  to: `8563972049e0473affd4d5f37d739ada9f29a5b9`,
   onto: `bfc55b5`,
   range: `>=4.2`,
 }];
@@ -178,6 +178,7 @@ async function cloneRepository() {
 
   await execFile(`git`, [`fetch`, `origin`], TS_REPO_SPAWN);
   await execFile(`git`, [`fetch`, `upstream`], TS_REPO_SPAWN);
+  await execFile(`git`, [`fetch`, `upstream2`], TS_REPO_SPAWN);
 }
 
 async function resetGit(hash) {
