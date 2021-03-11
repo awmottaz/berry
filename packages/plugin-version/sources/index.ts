@@ -10,7 +10,9 @@ declare module '@yarnpkg/core' {
     changesetBaseRefs: Array<string>;
     changesetIgnorePatterns: Array<string>;
     deferredVersionFolder: PortablePath;
+    changelogsFolder: PortablePath;
     preferDeferredVersions: boolean;
+    preferChangelogs: boolean;
   }
 }
 
@@ -30,12 +32,22 @@ const plugin: Plugin = {
       isArray: true,
     },
     deferredVersionFolder: {
-      description: `Folder where are stored the versioning files`,
+      description: `Folder where the versioning files are stored`,
       type: SettingsType.ABSOLUTE_PATH,
       default: `./.yarn/versions`,
     },
+    changelogsFolder: {
+      description: `Folder where the changelog files are stored`,
+      type: SettingsType.ABSOLUTE_PATH,
+      default: `./.yarn/versions/changelogs`,
+    },
     preferDeferredVersions: {
       description: `If true, running \`yarn version\` will assume the \`--deferred\` flag unless \`--immediate\` is set`,
+      type: SettingsType.BOOLEAN,
+      default: false,
+    },
+    preferChangelogs: {
+      description: `If true, running \`yarn version\` will assume the \`--changelog\` flag`,
       type: SettingsType.BOOLEAN,
       default: false,
     },

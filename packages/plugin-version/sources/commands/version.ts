@@ -1,6 +1,7 @@
 import {BaseCommand, WorkspaceRequiredError} from '@yarnpkg/cli';
 import {Configuration, Project}              from '@yarnpkg/core';
 import {Command, Option, Usage, UsageError}  from 'clipanion';
+import {prompt}                              from 'enquirer';
 import semver                                from 'semver';
 
 import * as versionUtils                     from '../versionUtils';
@@ -45,6 +46,10 @@ export default class VersionCommand extends BaseCommand {
     description: `Bump the version immediately`,
   });
 
+  changelog = Option.Boolean(`-c,--changelog`, {
+    description: `Prompts for a message to be included in the CHANGELOG`,
+  });
+
   strategy = Option.String();
 
   async execute() {
@@ -59,6 +64,10 @@ export default class VersionCommand extends BaseCommand {
       deferred = true;
     if (this.immediate)
       deferred = false;
+
+    let changelog = configuration.get(`preferChangelogs`);
+    if (this.changelog)
+      changelog = true;
 
     const isSemver = semver.valid(this.strategy);
     const isDeclined = this.strategy === versionUtils.Decision.DECLINE;
@@ -103,8 +112,24 @@ export default class VersionCommand extends BaseCommand {
       }
     }
 
+    const message: string | null = null;
+    if (changelog) {
+      const output = await prompt({
+        type: `text`,
+        name: `message`,
+        message: `What is the message to include in the CHANGELOG?`,
+        onCancel: () => process.exit(130),
+        stdin: this.context.stdin as NodeJS.ReadStream,
+        stdout: this.context.stdout as NodeJS.WriteStream,
+      }) as { message: string };
+
+      const changelogFile = await versionUtils.openChangelogFile(project, {allowEmpty: true});
+    }
+
+
     const versionFile = await versionUtils.openVersionFile(project, {allowEmpty: true});
     versionFile.releases.set(workspace, releaseStrategy as any);
+    versionFile.changelogs.set(workspace,);
     await versionFile.saveAll();
 
     if (!deferred) {

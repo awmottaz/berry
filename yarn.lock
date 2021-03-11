@@ -6210,6 +6210,7 @@ __metadata:
     "@yarnpkg/parsers": "workspace:^2.3.0"
     "@yarnpkg/plugin-pack": "workspace:^2.2.3"
     clipanion: ^3.0.0-rc.10
+    enquirer: ^2.3.6
     ink: ^3.0.7
     react: ^16.13.1
     semver: ^7.1.2

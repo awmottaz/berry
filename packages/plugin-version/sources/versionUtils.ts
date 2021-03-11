@@ -19,6 +19,8 @@ export enum Decision {
 export type Releases =
   Map<Workspace, Exclude<Decision, Decision.UNDECIDED>>;
 
+export type Changelogs = Map<Workspace, string>;
+
 export async function fetchBase(root: PortablePath, {baseRefs}: {baseRefs: Array<string>}) {
   if (baseRefs.length === 0)
     throw new UsageError(`Can't run this command with zero base refs specified.`);
@@ -89,6 +91,8 @@ export type VersionFile = {
 
   releaseRoots: Set<Workspace>,
   releases: Releases,
+
+  changelogs: Changelogs
 
   saveAll: () => Promise<void>,
 } & ({
@@ -189,6 +193,12 @@ export async function updateVersionFiles(project: Project) {
       ),
     ));
   }
+}
+
+export async function openChangelogFile(project: Project, opts: {allowEmpty: true}): Promise<File>;
+export async function openChangelogFile(project: Project, opts?: {allowEmpty?: boolean}): Promise<File | null>;
+export async function openChangelogFile(project: Project, {allowEmpty = false}: {allowEmpty?: boolean} = {}) {
+
 }
 
 export async function openVersionFile(project: Project, opts: {allowEmpty: true}): Promise<VersionFile>;
